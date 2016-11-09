@@ -5,8 +5,27 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:cecs545FinalProject"
         mc:Ignorable="d"
-        Title="MainWindow" Height="350" Width="525">
-    <Grid>
-        
+        Title="Clickmania Decison Problem Solver" Height="290.053" Width="589.474">
+    <Grid Margin="0,0,0,2">
+        <Label x:Name="inputFileLabel" Content="Input File" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="23" Width="66" VerticalContentAlignment="Center"/>
+        <TextBox x:Name="inputFilePath" Height="23" Margin="81,10,90,0" TextWrapping="Wrap" VerticalAlignment="Top" VerticalContentAlignment="Center" ToolTip="path to input file"/>
+        <Button x:Name="fileInputBrowseButton" Content="Browse" Margin="0,10,10,0" VerticalAlignment="Top" Height="23" HorizontalAlignment="Right" Width="75"/>
+        <Label x:Name="crossoverProbabilityLabel" Content="Crossover Probability" HorizontalAlignment="Left" Margin="10,38,0,0" VerticalAlignment="Top" ToolTip="The crossover probability is simply a value between 0 and 1 that represents the probability of parents crossing over to produce children."/>
+        <Label x:Name="mutationProbabilityLabel" Content="Mutation Probability" HorizontalAlignment="Left" Margin="10,69,0,0" VerticalAlignment="Top" ToolTip="Probability a mutation will occur in any given individual"/>
+        <Label x:Name="elitismPercentageLabel" Content="Elitism Percentage" HorizontalAlignment="Left" Margin="10,100,0,0" VerticalAlignment="Top" ToolTip="Percentage of top individuals that will pass on, unchanged, into the next generation"/>
+        <Slider x:Name="crossoverProbabilitySlider" Margin="137,42,90,0" VerticalAlignment="Top" Maximum="100" LargeChange="10" SmallChange="2" TickFrequency="10" Value="85"/>
+        <Slider x:Name="mutationProbabilitySlider" Margin="137,73,90,0" VerticalAlignment="Top" Maximum="100" LargeChange="10" SmallChange="2" TickFrequency="10" Value="8"/>
+        <Slider x:Name="elitismPercentageSlider" Margin="137,104,90,0" VerticalAlignment="Top" Maximum="100" LargeChange="10" SmallChange="2" TickFrequency="10" Value="5"/>
+        <TextBox x:Name="crossoverProbabilityTextBox" Height="26" Margin="0,38,10,0" TextWrapping="Wrap" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75" VerticalContentAlignment="Center" Text="{Binding ElementName=crossoverProbabilitySlider,Path=Value,StringFormat=#}"/>
+        <TextBox x:Name="mutationProbabilityTextBox" Height="26" Margin="0,69,10,0" TextWrapping="Wrap" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75" VerticalContentAlignment="Center" Text="{Binding ElementName=mutationProbabilitySlider,Path=Value,StringFormat=#}"/>
+        <TextBox x:Name="elitismPercentageTextBox" Height="26" Margin="0,100,10,0" TextWrapping="Wrap" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75" VerticalContentAlignment="Center" Text="{Binding ElementName=elitismPercentageSlider,Path=Value}"/>
+        <Label x:Name="populationSizeLabel" Content="Population Size" HorizontalAlignment="Left" Margin="10,131,0,0" VerticalAlignment="Top" ToolTip="Initial population size"/>
+        <Slider x:Name="populationSizeSlider" Margin="137,135,90,0" VerticalAlignment="Top" Maximum="100" LargeChange="10" SmallChange="2" TickFrequency="10" Value="50" Minimum="10"/>
+        <TextBox x:Name="populationSizeTextBox" Height="26" Margin="0,131,10,0" TextWrapping="Wrap" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75" VerticalContentAlignment="Center" Text="{Binding Value, ElementName=populationSizeSlider}"/>
+        <Button x:Name="startButton" Content="Start" Margin="10,193,10,10" Click="startButton_Click"/>
+        <Label x:Name="maxGenerationsLabel" Content="Max Generations" HorizontalAlignment="Left" Margin="10,162,0,0" VerticalAlignment="Top" ToolTip="Maximum number of generations to run before terminating"/>
+        <Slider x:Name="maxGenerationsSlider" Margin="137,166,90,0" VerticalAlignment="Top" Maximum="1000" LargeChange="50" SmallChange="10" TickFrequency="100" Value="100" Minimum="10"/>
+        <TextBox x:Name="maxGenerationsTextBox" Height="26" Margin="0,162,10,0" TextWrapping="Wrap" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75" VerticalContentAlignment="Center" Text="{Binding Value, ElementName=maxGenerationsSlider}"/>
+
     </Grid>
 </Window>
