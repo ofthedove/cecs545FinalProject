@@ -40,7 +40,7 @@ namespace cecs545FinalProject
             {
                 get
                 {
-                    return string.Format("Gen {0}|WoC {1}|Max {2}|Avg {3}|SDv {4}", genNum, WocFitness, MaxFitness, avgFitness, stdDevFit);
+                    return string.Format("Gen {0,3:###} : WoC {1,5:0.000} | Max {2,5:0.000} | Avg {3,5:0.000} | SDv {4,5:0.000}", genNum, WocFitness, MaxFitness, avgFitness, stdDevFit);
                 }
             }
 

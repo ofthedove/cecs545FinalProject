@@ -25,7 +25,7 @@ namespace cecs545FinalProject
     {
         // board size is 5*10
         const int numIntsInSolution = 25;
-        const int solutionValueMin = 0;
+        const int solutionValueMin = 0; // Probably shouldn't change this. It would screw with array stuff in WoC
         const int solutionValueMax = 25;
 
         Random rand = new Random();
@@ -140,7 +140,7 @@ namespace cecs545FinalProject
             Console.WriteLine("Generation {0} | Max Fitness {1}", e.Generation, e.Population.MaximumFitness);
 
             // TODO WoC stuff
-            Chromosome wocChrom = e.Population.GetTop(1)[0];
+            Chromosome wocChrom = CalculateWoC(e.Population);
 
             log.Write(Log.GenerationData.GenDataFromPopulation(e.Generation, e.Population, wocChrom));
 
@@ -174,6 +174,64 @@ namespace cecs545FinalProject
             {
                 lastFiveGens.Dequeue();
             }
+        }
+
+        /// <summary>
+        /// Calculate a WoC solution from a population
+        /// Each gene value is the most popular value for a gene in that position across the population
+        /// </summary>
+        /// <param name="pop">The input population. Must contain individuals</param>
+        /// <returns>A chromosome representing the WoC solution</returns>
+        private Chromosome CalculateWoC(Population pop)
+        {
+            // Create a hash table. Columns are gene positions and rows are possible gene values
+            // The values are the number of times that gene value occured in that position in the genome
+            byte[,] hash = new byte[numIntsInSolution, solutionValueMax + 1];
+
+            int i = 0, j = 0;
+            // Fill the hash table
+            foreach(Chromosome chrom in pop.Solutions)
+            { // Iterate through all individuals
+                i = 0; // i tracks the current gene position in this individual
+                foreach(Gene gene in chrom)
+                { // Iterate through this individuals genes
+                    hash[i, (int)gene.ObjectValue]++; // Increment the correct location in the hash table
+                    i++; // Increment our iterator
+                }
+            }
+
+            // Create an empty Chromosome to fill and return
+            Chromosome retChrom = new Chromosome();
+
+            // Iterate over hash table again calculating values for return chromosome
+            for (i = 0; i < numIntsInSolution; i++)
+            { // Iterate through columns, which are gene positions that will be colapsed into single gene values based on which value is most populat in that position
+                int mostPop = -1;
+                int timesRepeated = -1;
+                for (j = 0; j < solutionValueMax; j++)
+                { // Iterate through the rows in this column, finding the most popular value
+                    // Make current value the most popular value if it's been here more times. If they're tied choose randomly
+                    if(hash[i, j] > timesRepeated || (hash[i, j] == timesRepeated && rand.Next(0, 1) == 1))
+                    {
+                        timesRepeated = hash[i, j];
+                        mostPop = j;
+                    }
+                }
+
+                // If we don't have any most popular value, the column was empty, something went very wrong, throw an exception.
+                // (This shouldn't be able to happen, but it's still good to double check, as it might take some time to find this otherwise)
+                if (mostPop == -1) { throw new ApplicationException("Something went very wrong in WoC"); }
+
+                // Add this most popular gene value to the return chromosome
+                var newGene = new Gene(mostPop);
+                retChrom.Add(newGene);
+            }
+
+            // Let the WoC chromosome we built calculate it's fitness
+            retChrom.Evaluate(CalculateFitness);
+
+            // Return the WoC chromosome we built
+            return retChrom;
         }
 
         private void ga_OnRunComplete(object sender, GaEventArgs e)
@@ -238,7 +296,7 @@ namespace cecs545FinalProject
                 {
                     var gs = args.UserState as GenerationState;
                     generationValueLabel.Content = gs.genNum;
-                    fitnessValueLabel.Content = gs.maxFit;
+                    fitnessValueLabel.Content = String.Format("{0,5:0.000}", gs.maxFit);
                 });
 
             bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(
