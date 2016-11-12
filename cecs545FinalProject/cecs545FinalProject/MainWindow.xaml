@@ -5,7 +5,7 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:cecs545FinalProject"
         mc:Ignorable="d"
-        Title="Clickmania Decison Problem Solver" Height="290.053" Width="589.474">
+        Title="Clickmania Decison Problem Solver" Height="316.3" Width="589.474">
     <Grid Margin="0,0,0,2">
         <Label x:Name="inputFileLabel" Content="Input File" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="23" Width="66" VerticalContentAlignment="Center"/>
         <TextBox x:Name="inputFilePath" Height="23" Margin="81,10,90,0" TextWrapping="Wrap" VerticalAlignment="Top" VerticalContentAlignment="Center" ToolTip="path to input file"/>
@@ -22,10 +22,15 @@
         <Label x:Name="populationSizeLabel" Content="Population Size" HorizontalAlignment="Left" Margin="10,131,0,0" VerticalAlignment="Top" ToolTip="Initial population size"/>
         <Slider x:Name="populationSizeSlider" Margin="137,135,90,0" VerticalAlignment="Top" Maximum="100" LargeChange="10" SmallChange="2" TickFrequency="10" Value="50" Minimum="10"/>
         <TextBox x:Name="populationSizeTextBox" Height="26" Margin="0,131,10,0" TextWrapping="Wrap" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75" VerticalContentAlignment="Center" Text="{Binding Value, ElementName=populationSizeSlider}"/>
-        <Button x:Name="startButton" Content="Start" Margin="10,193,10,10" Click="startButton_Click"/>
+        <Button x:Name="startButton" Content="Start" Margin="10,193,10,41" Click="startButton_Click"/>
         <Label x:Name="maxGenerationsLabel" Content="Max Generations" HorizontalAlignment="Left" Margin="10,162,0,0" VerticalAlignment="Top" ToolTip="Maximum number of generations to run before terminating"/>
         <Slider x:Name="maxGenerationsSlider" Margin="137,166,90,0" VerticalAlignment="Top" Maximum="1000" LargeChange="50" SmallChange="10" TickFrequency="100" Value="100" Minimum="10"/>
         <TextBox x:Name="maxGenerationsTextBox" Height="26" Margin="0,162,10,0" TextWrapping="Wrap" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75" VerticalContentAlignment="Center" Text="{Binding Value, ElementName=maxGenerationsSlider}"/>
+        <Label x:Name="generationLabel" Content="Generation:" HorizontalAlignment="Left" Margin="10,0,0,10" Height="26" VerticalAlignment="Bottom"/>
+        <Label x:Name="generationValueLabel" Content="0" HorizontalAlignment="Left" Margin="86,0,0,10" Width="64" Height="26" VerticalAlignment="Bottom"/>
+        <Label x:Name="fitnessLabel" Content="Fitness:" HorizontalAlignment="Left" Margin="155,0,0,10" RenderTransformOrigin="-1.262,0.287" Height="26" VerticalAlignment="Bottom"/>
+        <Label x:Name="fitnessValueLabel" Content="0" HorizontalAlignment="Left" Margin="209,0,0,10" Height="26" VerticalAlignment="Bottom"/>
+        <Label x:Name="statusLabel" Content="Not Started" Margin="0,0,10,10" HorizontalAlignment="Right" Width="71" Height="26" VerticalAlignment="Bottom"/>
 
     </Grid>
 </Window>

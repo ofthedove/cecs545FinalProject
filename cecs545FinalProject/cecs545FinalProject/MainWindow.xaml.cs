@@ -136,6 +136,9 @@ namespace cecs545FinalProject
         {
             Console.WriteLine("Generation {0} | Max Fitness {1}", e.Generation, e.Population.MaximumFitness);
 
+            generationValueLabel.Content = e.Generation;
+            fitnessValueLabel.Content = e.Population.MaximumFitness;
+
             /* stuff from example
             //get the best solution 
             var chromosome = e.Population.GetTop(1)[0];
@@ -169,12 +172,14 @@ namespace cecs545FinalProject
         {
 
 
+            statusLabel.Content = "Done...";
             startButton.IsEnabled = true;
         }
 
         private void startButton_Click(object sender, RoutedEventArgs e)
         {
             startButton.IsEnabled = false;
+            statusLabel.Content = "Running...";
 
             gameBoard = ClickOMania.Board.GenerateRandomBoard(rand);
 
