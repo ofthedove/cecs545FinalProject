@@ -2,6 +2,7 @@
 using GAF.Operators;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -28,6 +29,7 @@ namespace cecs545FinalProject
         const int solutionValueMax = 25;
 
         Random rand = new Random();
+        BackgroundWorker b;
 
         double crossoverProbability = 0.85;
         double mutationProbability = 0.08;
@@ -136,8 +138,8 @@ namespace cecs545FinalProject
         {
             Console.WriteLine("Generation {0} | Max Fitness {1}", e.Generation, e.Population.MaximumFitness);
 
-            generationValueLabel.Content = e.Generation;
-            fitnessValueLabel.Content = e.Population.MaximumFitness;
+            GenerationState gs = new GenerationState() { genNum = e.Generation, maxFit = e.Population.MaximumFitness };
+            b.ReportProgress(-1, gs);
 
             /* stuff from example
             //get the best solution 
@@ -172,8 +174,6 @@ namespace cecs545FinalProject
         {
 
 
-            statusLabel.Content = "Done...";
-            startButton.IsEnabled = true;
         }
 
         private void startButton_Click(object sender, RoutedEventArgs e)
@@ -214,7 +214,40 @@ namespace cecs545FinalProject
             ga.OnGenerationComplete += ga_OnGenerationComplete;
             ga.OnRunComplete += ga_OnRunComplete;
 
-            ga.Run(TerminateFunction);
+
+
+            BackgroundWorker bw = new BackgroundWorker();
+            bw.WorkerReportsProgress = true;
+            bw.DoWork += new DoWorkEventHandler(
+                delegate (object o, DoWorkEventArgs args)
+                {
+                    b = o as BackgroundWorker;
+
+                    ga.Run(TerminateFunction);
+                });
+
+            bw.ProgressChanged += new ProgressChangedEventHandler(
+                delegate (object o, ProgressChangedEventArgs args)
+                {
+                    var gs = args.UserState as GenerationState;
+                    generationValueLabel.Content = gs.genNum;
+                    fitnessValueLabel.Content = gs.maxFit;
+                });
+
+            bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(
+                delegate (object o, RunWorkerCompletedEventArgs args)
+                {
+                    statusLabel.Content = "Done...";
+                    startButton.IsEnabled = true;
+                });
+
+            bw.RunWorkerAsync();
+        }
+
+        private class GenerationState
+        {
+            public int genNum;
+            public double maxFit;
         }
     }
 }
