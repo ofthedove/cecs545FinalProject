@@ -22,6 +22,13 @@ namespace cecs545FinalProject
     /// </summary>
     public partial class MainWindow : Window
     {
+        // board size is 5*10
+        const int numIntsInSolution = 25;
+        const int solutionValueMin = 0;
+        const int solutionValueMax = 25;
+
+        Random rand = new Random();
+
         double crossoverProbability = 0.85;
         double mutationProbability = 0.08;
         int elitismPercentage = 5;
@@ -36,6 +43,24 @@ namespace cecs545FinalProject
             InitializeComponent();
         }
 
+        private Population GenerateInitialPopulation(int popSize)
+        {
+            var population = new Population();
+
+            for (int i = 0; i < popSize; i++)
+            {
+                var chromosome = new Chromosome();
+                for(int j = 0; j < numIntsInSolution; j++)
+                {
+                    chromosome.Add(new Gene(rand.Next(solutionValueMin, solutionValueMax)));
+                }
+
+                population.Solutions.Add(chromosome);
+            }
+
+            return population;
+        }
+
         /// <summary>
         /// Fitness Function
         /// </summary>
@@ -45,23 +70,21 @@ namespace cecs545FinalProject
             double fitnessValue = -1;
             if (chromosome != null)
             {
-                //this is a range constant that is used to keep the x/y range between -100 and +100
-                var rangeConst = 200 / (System.Math.Pow(2, chromosome.Count / 2) - 1);
+                int[] arr = new int[25];
+                int i = 0;
 
-                //get x and y from the solution
-                var x1 = Convert.ToInt32(chromosome.ToBinaryString(0, chromosome.Count / 2), 2);
-                var y1 = Convert.ToInt32(chromosome.ToBinaryString(chromosome.Count / 2, chromosome.Count / 2), 2);
+                foreach(Gene gene in chromosome)
+                {
+                    arr[i] = (int)gene.ObjectValue;
+                    i++;
+                }
 
-                //Adjust range to -100 to +100
-                var x = (x1 * rangeConst) - 100;
-                var y = (y1 * rangeConst) - 100;
+                int fitness = ClickOMania.Game(arr, gameBoard.GetBoardAsArray());
 
-                //using binary F6 for fitness.
-                var temp1 = System.Math.Sin(System.Math.Sqrt(x * x + y * y));
-                var temp2 = 1 + 0.001 * (x * x + y * y);
-                var result = 0.5 + (temp1 * temp1 - 0.5) / (temp2 * temp2);
+                int adjustedFitness = (50 - fitness); // fitness is how many squares are empty, not how many are left
+                adjustedFitness = adjustedFitness * (1 / 50); // fitness needs to be between 0 and one, so multiply by min/max
 
-                fitnessValue = 1 - result;
+                return adjustedFitness;
             }
             else
             {
@@ -111,6 +134,9 @@ namespace cecs545FinalProject
 
         private void ga_OnGenerationComplete(object sender, GaEventArgs e)
         {
+            Console.WriteLine("Generation {0} | Max Fitness {1}", e.Generation, e.Population.MaximumFitness);
+
+            /* stuff from example
             //get the best solution 
             var chromosome = e.Population.GetTop(1)[0];
 
@@ -127,6 +153,7 @@ namespace cecs545FinalProject
 
             //display the X, Y and fitness of the best chromosome in this generation 
             Console.WriteLine("x:{0} y:{1} Fitness{2}", x, y, e.Population.MaximumFitness);
+            */
 
             // Maintain lastFiveGens queue
             // Put this generations fitness onto the queue
@@ -138,9 +165,18 @@ namespace cecs545FinalProject
             }
         }
 
+        private void ga_OnRunComplete(object sender, GaEventArgs e)
+        {
+
+
+            startButton.IsEnabled = true;
+        }
+
         private void startButton_Click(object sender, RoutedEventArgs e)
         {
-            gameBoard = ClickOMania.Board.GenerateRandomBoard();
+            startButton.IsEnabled = false;
+
+            gameBoard = ClickOMania.Board.GenerateRandomBoard(rand);
 
             crossoverProbability = crossoverProbabilitySlider.Value/100;
             mutationProbability = mutationProbabilitySlider.Value/100;
@@ -150,7 +186,7 @@ namespace cecs545FinalProject
 
             lastFiveGens = new Queue<double>();
 
-            var population = new Population(initialPopulationSize, 44);
+            var population = GenerateInitialPopulation(initialPopulationSize);
 
             //create the genetic operators 
             var elite = new Elite(elitismPercentage);
@@ -161,17 +197,18 @@ namespace cecs545FinalProject
                 ReplacementMethod = ReplacementMethod.DeleteLast
             };
 
-            var mutation = new BinaryMutate(mutationProbability, true);
+            var mutation = new SwapMutate(mutationProbability);
 
-            var ga = new GeneticAlgorithm(population, new FitnessFunction(CalculateFitness));
+            var ga = new GeneticAlgorithm(population, CalculateFitness);
 
             ga.Operators.Add(elite);
             ga.Operators.Add(crossover);
             ga.Operators.Add(mutation);
 
             ga.OnGenerationComplete += ga_OnGenerationComplete;
+            ga.OnRunComplete += ga_OnRunComplete;
 
-            ga.Run(new TerminateFunction(TerminateFunction));
+            ga.Run(TerminateFunction);
         }
     }
 }
