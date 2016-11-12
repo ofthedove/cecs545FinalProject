@@ -27,6 +27,7 @@ namespace cecs545FinalProject
         int elitismPercentage = 5;
         int initialPopulationSize = 50;
         int maxGenerations = 1000;
+        ClickOMania.Board gameBoard;
 
         Queue<double> lastFiveGens;
 
@@ -139,6 +140,7 @@ namespace cecs545FinalProject
 
         private void startButton_Click(object sender, RoutedEventArgs e)
         {
+            gameBoard = ClickOMania.Board.GenerateRandomBoard();
 
             crossoverProbability = crossoverProbabilitySlider.Value/100;
             mutationProbability = mutationProbabilitySlider.Value/100;
