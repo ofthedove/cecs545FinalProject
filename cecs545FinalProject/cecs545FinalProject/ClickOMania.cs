@@ -46,9 +46,10 @@ namespace cecs545FinalProject
             }
         }
 
-        public static int Game(int[] genes, Square[,] board)
+        public static int Game(int[] genes, Square[,] board, Random rand)
         {
-            Square[,] tempBoard = new Square[5,10];
+            return rand.Next(1, 50);
+            /*Square[,] tempBoard = new Square[5,10];
             for(int i = 0; i < 5; i++)
             {
                 for(int j = 0; j < 10; j++)
@@ -75,7 +76,7 @@ namespace cecs545FinalProject
                     if (tempBoard[i,j] != null) count++;
                 }
             }
-            return count;
+            return count;*/
         }
 
         public static void clearGroups(Square[,] clrBrd)

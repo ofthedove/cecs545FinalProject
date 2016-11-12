@@ -79,12 +79,12 @@ namespace cecs545FinalProject
                     i++;
                 }
 
-                int fitness = ClickOMania.Game(arr, gameBoard.GetBoardAsArray());
+                int fitness = ClickOMania.Game(arr, gameBoard.GetBoardAsArray(), rand);
 
-                int adjustedFitness = (50 - fitness); // fitness is how many squares are empty, not how many are left
-                adjustedFitness = adjustedFitness * (1 / 50); // fitness needs to be between 0 and one, so multiply by min/max
+                double adjustedFitness = (50 - fitness); // fitness is how many squares are empty, not how many are left
+                adjustedFitness = adjustedFitness * (1F / 50F); // fitness needs to be between 0 and one, so multiply by min/max
 
-                return adjustedFitness;
+                fitnessValue = adjustedFitness;
             }
             else
             {
@@ -104,7 +104,7 @@ namespace cecs545FinalProject
             long currentEvaluation)
         {
             // If we passed the max number of generations, terminate
-            if (currentGeneration > maxGenerations)
+            if (currentGeneration >= maxGenerations)
                 return true;
 
             // If we found the max possible fitness, terminate
@@ -118,7 +118,7 @@ namespace cecs545FinalProject
                 bool flag = false; // This flag goes true if we have different values and need to continue
                 for (int i = 1; i < lastFiveGens.Count; i++) // Iterate through the queue
                 {
-                    if (System.Math.Abs(lastFiveGens.ElementAt(i) - value) > 0.000001) // If the values are sufficeintly different
+                    if (System.Math.Abs((double)lastFiveGens.ElementAt(i) - (double)value) > 0.000001) // If the values are sufficeintly different
                     {
                         flag = true; // Flag that we need to keep running
                         break; // No point continuing, break
@@ -198,8 +198,9 @@ namespace cecs545FinalProject
 
             var crossover = new Crossover(crossoverProbability, true)
             {
+                AllowDuplicates = true,
                 CrossoverType = CrossoverType.SinglePoint,
-                ReplacementMethod = ReplacementMethod.DeleteLast
+                ReplacementMethod = ReplacementMethod.GenerationalReplacement
             };
 
             var mutation = new SwapMutate(mutationProbability);
