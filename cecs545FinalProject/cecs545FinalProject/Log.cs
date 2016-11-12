@@ -1,5 +1,7 @@
-﻿using System;
+﻿using GAF;
+using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,39 +10,124 @@ namespace cecs545FinalProject
 {
     class Log
     {
-        const int MAX_RET_STR_LEN = 1000;
+        private ClickOMania.Board board;
+        private List<GenerationData> logData;
+        
+        public int Length { get { return logData.Count;  } }
 
-        private class Message
+        public class GenerationData
         {
-            public string msg;
-        }
+            private double genNum;
+            private double avgFitness;
+            private double stdDevFit;
 
-        private List<Message> log;
+            private Chromosome mostFit;
+            private Chromosome leastFit;
+            private Chromosome WocSln;
 
-        public Log()
-        {
+            public double GenNum { get { return genNum; } }
+            public double MaxFitness { get { return mostFit.Fitness; } }
+            public double MinFitness { get { return leastFit.Fitness; } }
+            public double AvgFitness { get { return avgFitness; } }
+            public double StdDevFit { get { return stdDevFit; } }
+            public double WocFitness { get { return WocSln.Fitness; } }
 
-        }
+            public int[] MostFitSolution { get { return ChromToSolution(mostFit); } }
+            public int[] LeastFitSolution { get { return ChromToSolution(leastFit); } }
+            public int[] WocSlnSolution { get { return ChromToSolution(WocSln); } }
 
-        public void Write(string msgIn)
-        {
-            var newMsg = new Message() { msg = msgIn };
-            log.Add(newMsg);
-        }
-
-        public string Read(int start, int end)
-        {
-            if (start + 30 < end)
+            public string Blurb
             {
-                throw new ArgumentException("May not request more than 30 entries at a time!");
+                get
+                {
+                    return string.Format("Gen {0}|WoC {1}|Max {2}|Avg {3}|SDv {4}", genNum, WocFitness, MaxFitness, avgFitness, stdDevFit);
+                }
             }
 
-            string returnString = "";
-            for(int i = start; i < end; i++)
+            private GenerationData(int genNumIn, double avgFitIn, double stdDevFitIn, Chromosome mostFitIn, Chromosome leastFitIn, Chromosome WocSlnIn)
             {
-                returnString += log[start];
+                genNum = genNumIn;
+                avgFitness = avgFitIn;
+                stdDevFit = stdDevFitIn;
+
+                mostFit = mostFitIn;
+                leastFit = leastFitIn;
+                WocSln = WocSlnIn;
             }
-            return returnString;
+
+            public static GenerationData GenDataFromPopulation(int genNumIn, Population pop, Chromosome WocSlnIn)
+            {
+                double avgFitness = pop.AverageFitness;
+
+                double stdDevFit = 0;
+                double runningSum = 0;
+                foreach(Chromosome chrom in pop.Solutions)
+                {
+                    runningSum += System.Math.Pow(chrom.Fitness - avgFitness, 2);
+                }
+                stdDevFit = runningSum / (double)pop.PopulationSize;
+                stdDevFit = System.Math.Sqrt(stdDevFit);
+
+                Chromosome mostFit = pop.GetTop(1)[0];
+                Chromosome leastFit = pop.GetBottom(1)[0];
+
+                return new GenerationData(genNumIn, avgFitness, stdDevFit, mostFit, leastFit, WocSlnIn);
+            }
+
+            public static int[] ChromToSolution(Chromosome chrom)
+            {
+                int[] arr = new int[25];
+                int i = 0;
+
+                foreach (Gene gene in chrom)
+                {
+                    arr[i] = (int)gene.ObjectValue;
+                    i++;
+                }
+
+                return arr;
+            }
+        }
+
+        public Log(ClickOMania.Board brd)
+        {
+            board = brd;
+            logData = new List<GenerationData>();
+        }
+
+        public void Write(GenerationData item)
+        {
+            logData.Add(item);
+        }
+
+        public string ReadShort(int index)
+        {
+            if (index < 0 || index >= Length)
+            {
+                throw new ArgumentException("Specified index does not exist in log");
+            }
+
+            return logData[index].Blurb;
+        }
+
+        public GenerationData ReadFull(int index)
+        {
+            if (index < 0 || index >= Length)
+            {
+                throw new ArgumentException("Specified index does not exist in log");
+            }
+
+            return logData[index];
+        }
+
+        public void SaveBrief(string filePath)
+        {
+            StreamWriter writer = new StreamWriter(filePath);
+            for(int i = 0; i < this.Length; i++)
+            {
+                writer.WriteLine(this.ReadShort(i));
+            }
+            writer.Close();
         }
     }
 }

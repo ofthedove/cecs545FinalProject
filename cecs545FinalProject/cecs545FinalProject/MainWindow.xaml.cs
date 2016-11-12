@@ -39,6 +39,7 @@ namespace cecs545FinalProject
         ClickOMania.Board gameBoard;
 
         Queue<double> lastFiveGens;
+        Log log;
 
         public MainWindow()
         {
@@ -138,6 +139,11 @@ namespace cecs545FinalProject
         {
             Console.WriteLine("Generation {0} | Max Fitness {1}", e.Generation, e.Population.MaximumFitness);
 
+            // TODO WoC stuff
+            Chromosome wocChrom = e.Population.GetTop(1)[0];
+
+            log.Write(Log.GenerationData.GenDataFromPopulation(e.Generation, e.Population, wocChrom));
+
             GenerationState gs = new GenerationState() { genNum = e.Generation, maxFit = e.Population.MaximumFitness };
             b.ReportProgress(-1, gs);
 
@@ -182,6 +188,7 @@ namespace cecs545FinalProject
             statusLabel.Content = "Running...";
 
             gameBoard = ClickOMania.Board.GenerateRandomBoard(rand);
+            log = new Log(gameBoard);
 
             crossoverProbability = crossoverProbabilitySlider.Value/100;
             mutationProbability = mutationProbabilitySlider.Value/100;
@@ -239,6 +246,8 @@ namespace cecs545FinalProject
                 {
                     statusLabel.Content = "Done...";
                     startButton.IsEnabled = true;
+
+                    log.SaveBrief(@"C:\Users\Andrew\Desktop\output.txt");
                 });
 
             bw.RunWorkerAsync();
