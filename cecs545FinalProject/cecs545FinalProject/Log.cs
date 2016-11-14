@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace cecs545FinalProject
 {
-    class Log
+    public class Log
     {
         private ClickOMania.Board board;
         private List<GenerationData> logData;

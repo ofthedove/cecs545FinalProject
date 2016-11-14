@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Controls;
@@ -137,34 +138,18 @@ namespace cecs545FinalProject
 
         private void ga_OnGenerationComplete(object sender, GaEventArgs e)
         {
+            // Basic log debugging stuff. Not really needed
             Console.WriteLine("Generation {0} | Max Fitness {1}", e.Generation, e.Population.MaximumFitness);
-
-            // TODO WoC stuff
+            
+            // Do WoC stuff
             Chromosome wocChrom = CalculateWoC(e.Population);
 
+            // Add this generation's data to our log
             log.Write(Log.GenerationData.GenDataFromPopulation(e.Generation, e.Population, wocChrom));
 
+            // Report the current state of execution back to the main UI thread
             GenerationState gs = new GenerationState() { genNum = e.Generation, maxFit = e.Population.MaximumFitness };
             b.ReportProgress(-1, gs);
-
-            /* stuff from example
-            //get the best solution 
-            var chromosome = e.Population.GetTop(1)[0];
-
-            //decode chromosome
-
-            //get x and y from the solution 
-            var x1 = Convert.ToInt32(chromosome.ToBinaryString(0, chromosome.Count / 2), 2);
-            var y1 = Convert.ToInt32(chromosome.ToBinaryString(chromosome.Count / 2, chromosome.Count / 2), 2);
-
-            //Adjust range to -100 to +100 
-            var rangeConst = 200 / (System.Math.Pow(2, chromosome.Count / 2) - 1);
-            var x = (x1 * rangeConst) - 100;
-            var y = (y1 * rangeConst) - 100;
-
-            //display the X, Y and fitness of the best chromosome in this generation 
-            Console.WriteLine("x:{0} y:{1} Fitness{2}", x, y, e.Population.MaximumFitness);
-            */
 
             // Maintain lastFiveGens queue
             // Put this generations fitness onto the queue
@@ -240,6 +225,39 @@ namespace cecs545FinalProject
 
         }
 
+        private void bw_ProgressChanged(object o, ProgressChangedEventArgs args)
+        {
+            var gs = args.UserState as GenerationState;
+            generationValueLabel.Content = gs.genNum;
+            fitnessValueLabel.Content = String.Format("{0,5:0.000}", gs.maxFit);
+        }
+
+        private void bw_RunWorkerComplete(object o, RunWorkerCompletedEventArgs args)
+        {
+            statusLabel.Content = "Done...";
+            startButton.IsEnabled = true;
+
+            log.SaveBrief(@"C:\Users\Andrew\Desktop\output.txt");
+
+            ShowResultNavigator();
+        }
+
+        private void ShowResultNavigator()
+        {
+            /*Thread t = new Thread(
+                delegate ()
+                {
+                    ResultNavigator rn = new ResultNavigator(log);
+                    rn.ShowDialog();
+                });
+            t.SetApartmentState(ApartmentState.STA);
+            t.IsBackground = true;
+            t.Start();*/
+
+            ResultNavigator rn = new ResultNavigator(log);
+            rn.Show();
+        }
+
         private void startButton_Click(object sender, RoutedEventArgs e)
         {
             startButton.IsEnabled = false;
@@ -287,27 +305,10 @@ namespace cecs545FinalProject
                 delegate (object o, DoWorkEventArgs args)
                 {
                     b = o as BackgroundWorker;
-
                     ga.Run(TerminateFunction);
                 });
-
-            bw.ProgressChanged += new ProgressChangedEventHandler(
-                delegate (object o, ProgressChangedEventArgs args)
-                {
-                    var gs = args.UserState as GenerationState;
-                    generationValueLabel.Content = gs.genNum;
-                    fitnessValueLabel.Content = String.Format("{0,5:0.000}", gs.maxFit);
-                });
-
-            bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(
-                delegate (object o, RunWorkerCompletedEventArgs args)
-                {
-                    statusLabel.Content = "Done...";
-                    startButton.IsEnabled = true;
-
-                    log.SaveBrief(@"C:\Users\Andrew\Desktop\output.txt");
-                });
-
+            bw.ProgressChanged += new ProgressChangedEventHandler(bw_ProgressChanged);
+            bw.RunWorkerCompleted += new RunWorkerCompletedEventHandler(bw_RunWorkerComplete);
             bw.RunWorkerAsync();
         }
 

@@ -1,0 +1,44 @@
+﻿<Window x:Class="cecs545FinalProject.ResultNavigator"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:cecs545FinalProject"
+        mc:Ignorable="d"
+        Title="ResultNavigator" Height="442.106" Width="841.353">
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition/>
+        </Grid.ColumnDefinitions>
+        <ListBox x:Name="genListBox" Margin="0,10,10,10" HorizontalAlignment="Right" Width="339" SelectionChanged="genListBox_SelectionChanged"/>
+        <TabControl x:Name="tabControl" Margin="187,10,359,10">
+            <TabItem x:Name="WoCIndvTab" Header="WoC Solution">
+                <Grid Background="#FFE5E5E5">
+                    <Image x:Name="WoCSlnImage" HorizontalAlignment="Left" Margin="10,10,0,35" Width="260"/>
+                    <Slider x:Name="WoCSlnSlider" Margin="10,0,10,10" RenderTransformOrigin="0.374,2.32" Height="20" VerticalAlignment="Bottom"/>
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="BestIndvTab" Header="Best Fit">
+                <Grid Background="#FFE5E5E5">
+                    <Image x:Name="BestFitImage" HorizontalAlignment="Left" Margin="10,10,0,35" Width="260"/>
+                    <Slider x:Name="BestFitSlider" Margin="10,0,10,10" RenderTransformOrigin="0.374,2.32" Height="20" VerticalAlignment="Bottom"/>
+                </Grid>
+            </TabItem>
+            <TabItem x:Name="LeastIndvTab" Header="Least Fit">
+                <Grid Background="#FFE5E5E5">
+                    <Image x:Name="LeastFitImage" HorizontalAlignment="Left" Margin="10,10,0,35" Width="260"/>
+                    <Slider x:Name="LeastFitSlider" Margin="10,0,10,10" RenderTransformOrigin="0.374,2.32" Height="20" VerticalAlignment="Bottom"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+        <Label x:Name="generationLabel" Content="Generation" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="29" Width="90"/>
+        <Label x:Name="generationValueLabel" Content="100" HorizontalAlignment="Left" Margin="135,10,0,0" VerticalAlignment="Top" Height="29" Width="47"/>
+        <Label x:Name="maxFitnessLabel" Content="Max Fitness" HorizontalAlignment="Left" Margin="10,44,0,0" VerticalAlignment="Top" Height="29" Width="90"/>
+        <Label x:Name="maxFitnessValueLabel" Content="0.901" HorizontalAlignment="Left" Margin="135,44,0,0" VerticalAlignment="Top" Height="29" Width="47"/>
+        <Label x:Name="minFitnessLabel" Content="Min Fitness" HorizontalAlignment="Left" Margin="10,78,0,0" VerticalAlignment="Top" Height="29" Width="90"/>
+        <Label x:Name="minFitnessValueLabel" Content="0.901" HorizontalAlignment="Left" Margin="135,78,0,0" VerticalAlignment="Top" Height="29" Width="47"/>
+        <Label x:Name="wocFitnessLabel" Content="WoC Fitness" HorizontalAlignment="Left" Margin="10,112,0,0" VerticalAlignment="Top" Height="29" Width="90"/>
+        <Label x:Name="wocFitnessValueLabel" Content="0.901" HorizontalAlignment="Left" Margin="135,112,0,0" VerticalAlignment="Top" Height="29" Width="47" RenderTransformOrigin="-0.534,0.613"/>
+
+    </Grid>
+</Window>
