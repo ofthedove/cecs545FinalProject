@@ -24,7 +24,7 @@ namespace cecs545FinalProject
 
         public class Board
         {
-            public Square[,] innerBoard;
+            private Square[,] innerBoard;
 
             private Board()
             {
@@ -65,7 +65,6 @@ namespace cecs545FinalProject
         public static int Game(int[] genes, Square[,] board)
         {
             Square[,] tempBoard = new Square[5, 10];
-            drawBoard(board);
             for (int i = 0; i < 5; i++)
             {
                 for (int j = 0; j < 10; j++)
@@ -92,6 +91,32 @@ namespace cecs545FinalProject
                 }
             }
             return count;
+        }
+
+        public static List<Bitmap> GenerateImageList(int[] genes, Square[,] board)
+        {
+            Square[,] tempBoard = new Square[5, 10];
+            drawBoard(board);
+            for (int i = 0; i < 5; i++)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    tempBoard[i, j] = board[i, j];
+                }
+            }
+            int groups = 0;
+            int iter = 1;
+            List<Bitmap> retImgs = new List<Bitmap>();
+            while (true)
+            {
+                retImgs.Add(drawBoard(tempBoard));
+                clearGroups(tempBoard);
+                groups = makeGroups(tempBoard);
+                if (groups == 0) break;
+                makeMove(tempBoard, genes, groups, iter);
+                iter++;
+            }
+            return retImgs;
         }
 
         public static void clearGroups(Square[,] clrBrd)
@@ -211,7 +236,7 @@ namespace cecs545FinalProject
             return array;
         }
 
-        public static bool drawBoard(Square[,] bord)
+        public static Bitmap drawBoard(Square[,] bord)
         {
             Bitmap bob = new Bitmap(50, 100);
             for (int i = 1; i < 50; i++)
@@ -224,12 +249,29 @@ namespace cecs545FinalProject
                     else if (bord[i / 10, j / 10].color == 3) bob.SetPixel(i, 100 - j, Color.Purple);
                     else bob.SetPixel(i, 100 - j, Color.Black);
                 }
-                bob.Save("myimage.png");
+            }
+            return bob;
+            
+            /*Graphics g = Graphics.FromImage(bob);
+            Brush wb = Brushes.White;
+            Brush rb = Brushes.Red;
+            Brush gb = Brushes.Green;
+            Brush pb = Brushes.Purple;
+            for (int i = 0; i < 5; i++)
+            {
+                for (int j = 0; j < 10; j++)
+                {
+                    if (bord[i,j] == null) { g.FillRectangle(wb, i * 5, j * 5, i * (5 + 1), j * (5 + 1)); }
+                    else if (bord[i, j].color == 1) { g.FillRectangle(rb, i * 5, j * 5, i * (5 + 1), j * (5 + 1)); }
+                    else if (bord[i, j].color == 2) { g.FillRectangle(gb, i * 5, j * 5, i * (5 + 1), j * (5 + 1)); }
+                    else if (bord[i, j].color == 3) { g.FillRectangle(pb, i * 5, j * 5, i * (5 + 1), j * (5 + 1)); }
+                }
             }
 
-            return false;
-        }
+            bob.Save("myimage.png");*/
 
+            //return false;
+        }
 
         public static void makeMove(Square[,] tempBrd, int[] gene, int grp, int iterations)
         {

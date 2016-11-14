@@ -71,18 +71,18 @@ namespace cecs545FinalProject
         /// <returns>Between 0 and 1 with 1 being being most fit</returns>
         private double CalculateFitness(Chromosome chromosome)
         {
+            int[] arr = new int[25];
+            int i = 0;
+
+            foreach (Gene gene in chromosome)
+            {
+                arr[i] = (int)gene.ObjectValue;
+                i++;
+            }
+
             double fitnessValue = -1;
             if (chromosome != null)
             {
-                int[] arr = new int[25];
-                int i = 0;
-
-                foreach(Gene gene in chromosome)
-                {
-                    arr[i] = (int)gene.ObjectValue;
-                    i++;
-                }
-
                 int fitness = ClickOMania.Game(arr, gameBoard.GetBoardAsArray());
 
                 double adjustedFitness = (50 - fitness); // fitness is how many squares are empty, not how many are left

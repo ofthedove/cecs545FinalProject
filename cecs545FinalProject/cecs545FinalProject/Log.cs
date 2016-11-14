@@ -12,6 +12,8 @@ namespace cecs545FinalProject
     {
         private ClickOMania.Board board;
         private List<GenerationData> logData;
+
+        public ClickOMania.Board OriginalBoard { get { return board;  } }
         
         public int Length { get { return logData.Count;  } }
 
