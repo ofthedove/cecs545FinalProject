@@ -44,7 +44,7 @@ namespace cecs545FinalProject
                     for(int j = 0; j < 10; j++)
                     {
                         Square sqr = new Square();
-                        sqr.color = rand.Next();
+                        sqr.color = rand.Next(1,4);
                         sqr.group = 0;
                         brd.innerBoard[i, j] = sqr;
                     }
