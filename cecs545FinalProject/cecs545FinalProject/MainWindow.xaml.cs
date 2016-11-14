@@ -83,7 +83,7 @@ namespace cecs545FinalProject
                     i++;
                 }
 
-                int fitness = ClickOMania.Game(arr, gameBoard.GetBoardAsArray(), rand);
+                int fitness = ClickOMania.Game(arr, gameBoard.GetBoardAsArray());
 
                 double adjustedFitness = (50 - fitness); // fitness is how many squares are empty, not how many are left
                 adjustedFitness = adjustedFitness * (1F / 50F); // fitness needs to be between 0 and one, so multiply by min/max

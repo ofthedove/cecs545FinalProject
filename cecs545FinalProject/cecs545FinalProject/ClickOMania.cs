@@ -6,8 +6,21 @@ using System.Threading.Tasks;
 
 namespace cecs545FinalProject
 {
-    class ClickOMania
+    public class ClickOMania
     {
+        public class Square
+        {
+            public int color;
+            public int group;
+
+
+            public Square()
+            {
+                color = 0;
+                group = 0;
+            }
+        }
+
         public class Board
         {
             public Square[,] innerBoard;
@@ -46,18 +59,12 @@ namespace cecs545FinalProject
             }
         }
 
-        public static int Game(int[] genes, Square[,] board, Random rand)
-        {
-            return rand.Next(1, 50);
-            /*Square[,] tempBoard = new Square[5,10];
-            for(int i = 0; i < 5; i++)
-            {
-                for(int j = 0; j < 10; j++)
-                {
-                    tempBoard[i, j] = board[i, j];
-                }
-            }
 
+
+        public static int Game(int[] genes, Square[,] board)
+        {
+            Square[,] tempBoard = new Square[5, 10];
+            tempBoard = board;
             int groups = 0;
             int iter = 1;
             while (true)
@@ -73,10 +80,10 @@ namespace cecs545FinalProject
             {
                 for (int j = 0; j < 10; j++)
                 {
-                    if (tempBoard[i,j] != null) count++;
+                    if (tempBoard[i, j] != null) count++;
                 }
             }
-            return count;*/
+            return count;
         }
 
         public static void clearGroups(Square[,] clrBrd)
@@ -85,7 +92,8 @@ namespace cecs545FinalProject
             {
                 for (int j = 0; j < 10; j++)
                 {
-                    clrBrd[i,j].group = 0;
+                    if (clrBrd[i, j] != null)
+                        clrBrd[i, j].group = 0;
                 }
             }
         }
@@ -93,51 +101,108 @@ namespace cecs545FinalProject
         public static int makeGroups(Square[,] brd)
         {
             int count = 0;
+            int flag = 0;
             for (int i = 0; i < 5; i++)
             {
                 for (int j = 0; j < 10; j++)
                 {
-                    if (brd[i,j].color == brd[i + 1,j].color && brd[i + 1,j].group == 0)
+                    flag = 0;
+                    if (brd[i, j] == null) continue;
+                    if (i != 4 && brd[i + 1, j] != null)
                     {
-                        brd[i,j].group = count + 1;
-                        brd[i,j + 1].group = brd[i,j].group;
-                        check(brd, i + 1, j);
+                        if (brd[i, j].color == brd[i + 1, j].color && brd[i + 1, j].group == 0)
+                        {
+                            brd[i, j].group = count + 1;
+                            brd[i + 1, j].group = brd[i, j].group;
+                            check(brd, i + 1, j, count + 1);
+                            flag = 1;
+                        }
                     }
-                    if (brd[i,j].color == brd[i,j + 1].color && brd[i,j + 1].group == 0)
+                    if (j != 9 && brd[i, j + 1] != null)
                     {
-                        brd[i,j].group = count + 1;
-                        brd[i,j + 1].group = brd[i,j].group;
-                        check(brd, i - 1, j);
+                        if (brd[i, j].color == brd[i, j + 1].color && brd[i, j + 1].group == 0)
+                        {
+                            brd[i, j].group = count + 1;
+                            brd[i, j + 1].group = brd[i, j].group;
+                            check(brd, i, j + 1, count + 1);
+                            flag = 1;
+                        }
                     }
-                    if (brd[i,j].group != 0) count++;
+                    if (brd[i, j] != null)
+                    {
+                        if (flag == 1) count++;
+                    }
                 }
             }
             return count;
         }
 
-        public static void check(Square[,] brd, int x, int y)
+        public static void check(Square[,] brd, int x, int y, int grp)
         {
-            if (brd[x,y].color == brd[x + 1,y].color && brd[x + 1,y].group == 0)
+            if (brd[x, y] == null) return;
+            if (x != 4)
             {
-                brd[x + 1,y].group = brd[x,y].group;
-                check(brd, x + 1, y);
+                if (brd[x + 1, y] != null)
+                {
+                    if (brd[x, y].color == brd[x + 1, y].color && brd[x + 1, y].group == 0)
+                    {
+                        brd[x + 1, y].group = grp;
+                        check(brd, x + 1, y, grp);
+                    }
+                }
             }
-            if (brd[x,y].color == brd[x - 1,y].color && brd[x - 1,y].group == 0)
+            if (x != 0)
             {
-                brd[x - 1,y].group = brd[x,y].group;
-                check(brd, x - 1, y);
+                if (brd[x - 1, y] != null)
+                {
+                    if (brd[x, y].color == brd[x - 1, y].color && brd[x - 1, y].group == 0)
+                    {
+                        brd[x - 1, y].group = grp;
+                        check(brd, x - 1, y, grp);
+                    }
+                }
             }
-            if (brd[x,y].color == brd[x,y + 1].color && brd[x,y + 1].group == 0)
+            if (y != 9)
             {
-                brd[x,y + 1].group = brd[x,y].group;
-                check(brd, x, y + 1);
+                if (brd[x, y + 1] != null)
+                {
+                    if (brd[x, y].color == brd[x, y + 1].color && brd[x, y + 1].group == 0)
+                    {
+                        brd[x, y + 1].group = grp;
+                        check(brd, x, y + 1, grp);
+                    }
+                }
             }
-            if (brd[x,y].color == brd[x,y - 1].color && brd[x,y - 1].group == 0)
+            if (y != 0)
             {
-                brd[x,y - 1].group = brd[x,y].group;
-                check(brd, x, y - 1);
+                if (brd[x, y - 1] != null)
+                {
+                    if (brd[x, y].color == brd[x, y - 1].color && brd[x, y - 1].group == 0)
+                    {
+                        brd[x, y - 1].group = grp;
+                        check(brd, x, y - 1, grp);
+                    }
+                }
             }
         }
+
+        public static T[,] InitializeArray<T>(int width, int height) where T : new()
+        {
+            T[,] array = new T[width, height];
+            for (int i = 0; i < width; ++i)
+            {
+                for (int j = 0; j < height; j++)
+                {
+
+
+                    array[i, j] = new T();
+
+                }
+            }
+
+            return array;
+        }
+
 
         public static void makeMove(Square[,] tempBrd, int[] gene, int grp, int iterations)
         {
@@ -145,23 +210,24 @@ namespace cecs545FinalProject
             {
                 for (int j = 0; j < 10; j++)
                 {
-                    if (tempBrd[i,j].group == gene[(iterations % grp) + 1]) tempBrd[i,j] = null;
+                    if (tempBrd[i, j] == null) continue;
+                    if (tempBrd[i, j].group == gene[(iterations % grp)]) tempBrd[i, j] = null;
                 }
             }
             for (int i = 0; i < 5; i++)
             {
                 for (int j = 0; j < 10; j++)
                 {
-                    if (tempBrd[i,j] == null)
+                    if (tempBrd[i, j] == null)
                     {
                         int temp = j;
                         for (int k = temp; k < 10; k++)
                         {
-                            if (tempBrd[i,k] == null) ;
+                            if (tempBrd[i, k] == null) ;
                             else
                             {
-                                tempBrd[i,temp] = tempBrd[i,k];
-                                tempBrd[i,k] = null;
+                                tempBrd[i, temp] = tempBrd[i, k];
+                                tempBrd[i, k] = null;
                                 temp++;
                             }
 
@@ -171,30 +237,25 @@ namespace cecs545FinalProject
             }
             for (int i = 0; i < 5; i++)
             {
-                if (tempBrd[i,0] == null)
+                if (tempBrd[i, 0] == null)
                 {
                     int temp = i;
                     for (int j = temp; j < 5; j++)
                     {
-                        if (tempBrd[j,0] == null) ;
+                        if (tempBrd[j, 0] == null) ;
                         else
                         {
                             for (int k = 0; k < 10; k++)
                             {
-                                tempBrd[temp,k] = tempBrd[j,k];
-                                tempBrd[j,k] = null;
+                                tempBrd[temp, k] = tempBrd[j, k];
+                                tempBrd[j, k] = null;
                             }
                             temp++;
                         }
                     }
                 }
             }
-        }
 
-        public class Square
-        {
-            public int color;
-            public int group;
         }
     }
 }
