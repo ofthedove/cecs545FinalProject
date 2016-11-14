@@ -18,7 +18,7 @@
         <Slider x:Name="crossoverProbabilitySlider" Margin="137,42,90,0" VerticalAlignment="Top" Maximum="100" LargeChange="10" SmallChange="2" TickFrequency="10" Value="85"/>
         <Slider x:Name="mutationProbabilitySlider" Margin="137,73,90,0" VerticalAlignment="Top" Maximum="100" LargeChange="10" SmallChange="2" TickFrequency="10" Value="8"/>
         <Slider x:Name="elitismPercentageSlider" Margin="137,104,90,0" VerticalAlignment="Top" Maximum="100" LargeChange="10" SmallChange="2" TickFrequency="10" Value="5"/>
-        <Slider x:Name="populationSizeSlider" Margin="137,135,90,0" VerticalAlignment="Top" Maximum="100" LargeChange="10" SmallChange="2" TickFrequency="10" Value="50" Minimum="10"/>
+        <Slider x:Name="populationSizeSlider" Margin="137,135,90,0" VerticalAlignment="Top" Maximum="100" LargeChange="10" SmallChange="2" TickFrequency="10" Value="50" Minimum="2"/>
         <Slider x:Name="maxGenerationsSlider" Margin="137,166,90,0" VerticalAlignment="Top" Maximum="1000" LargeChange="50" SmallChange="10" TickFrequency="100" Value="100" Minimum="10"/>
         <TextBox x:Name="crossoverProbabilityTextBox" Height="26" Margin="0,38,10,0" TextWrapping="Wrap" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75" VerticalContentAlignment="Center" Text="{Binding ElementName=crossoverProbabilitySlider,Path=Value,StringFormat=#}"/>
         <TextBox x:Name="mutationProbabilityTextBox" Height="26" Margin="0,69,10,0" TextWrapping="Wrap" VerticalAlignment="Top" HorizontalAlignment="Right" Width="75" VerticalContentAlignment="Center" Text="{Binding ElementName=mutationProbabilitySlider,Path=Value,StringFormat=#}"/>

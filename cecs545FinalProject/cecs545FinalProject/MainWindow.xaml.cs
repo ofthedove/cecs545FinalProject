@@ -112,7 +112,7 @@ namespace cecs545FinalProject
                 return true;
 
             // If we found the max possible fitness, terminate
-            if (population.MaximumFitness == 1)
+            if (System.Math.Abs(population.MaximumFitness - 1) < 0.000001)
                 return true;
 
             // If we got the same fitness for the last five generations, terminate
