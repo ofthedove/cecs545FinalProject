@@ -9,7 +9,7 @@
     <Grid Margin="0,0,0,2">
         <Label x:Name="inputFileLabel" Content="Input File" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" Height="23" Width="66" VerticalContentAlignment="Center"/>
         <TextBox x:Name="inputFilePath" Height="23" Margin="81,10,90,0" TextWrapping="Wrap" VerticalAlignment="Top" VerticalContentAlignment="Center" ToolTip="path to input file"/>
-        <Button x:Name="fileInputBrowseButton" Content="Browse" Margin="0,10,10,0" VerticalAlignment="Top" Height="23" HorizontalAlignment="Right" Width="75"/>
+        <Button x:Name="fileInputBrowseButton" Content="Browse" Margin="0,10,10,0" VerticalAlignment="Top" Height="23" HorizontalAlignment="Right" Width="75" Click="fileInputBrowseButton_Click"/>
         <Label x:Name="crossoverProbabilityLabel" Content="Crossover Probability" HorizontalAlignment="Left" Margin="10,38,0,0" VerticalAlignment="Top" ToolTip="The crossover probability is simply a value between 0 and 1 that represents the probability of parents crossing over to produce children."/>
         <Label x:Name="mutationProbabilityLabel" Content="Mutation Probability" HorizontalAlignment="Left" Margin="10,69,0,0" VerticalAlignment="Top" ToolTip="Probability a mutation will occur in any given individual"/>
         <Label x:Name="elitismPercentageLabel" Content="Elitism Percentage" HorizontalAlignment="Left" Margin="10,100,0,0" VerticalAlignment="Top" ToolTip="Percentage of top individuals that will pass on, unchanged, into the next generation"/>
@@ -30,7 +30,7 @@
         <Label x:Name="generationValueLabel" Content="0" HorizontalAlignment="Left" Margin="86,0,0,10" Width="64" Height="26" VerticalAlignment="Bottom"/>
         <Label x:Name="fitnessLabel" Content="Fitness:" HorizontalAlignment="Left" Margin="155,0,0,10" RenderTransformOrigin="-1.262,0.287" Height="26" VerticalAlignment="Bottom"/>
         <Label x:Name="fitnessValueLabel" Content="0" HorizontalAlignment="Left" Margin="209,0,0,10" Height="26" VerticalAlignment="Bottom"/>
-        <Label x:Name="statusLabel" Content="Not Started" Margin="0,0,10,10" HorizontalAlignment="Right" Width="71" Height="26" VerticalAlignment="Bottom"/>
+        <Label x:Name="statusLabel" Content="Not Started" Margin="230,0,10,10" Height="26" VerticalAlignment="Bottom" HorizontalContentAlignment="Right"/>
 
     </Grid>
 </Window>

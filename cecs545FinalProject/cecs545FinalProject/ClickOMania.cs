@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Drawing;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace cecs545FinalProject
 {
@@ -50,6 +51,50 @@ namespace cecs545FinalProject
                         brd.innerBoard[i, j] = sqr;
                     }
                 }
+
+                return brd;
+            }
+
+            public static Board LoadBoardFromFile(string path)
+            {
+                Board brd = new Board();
+
+                try
+                {
+                    using (StreamReader sr = new StreamReader(path))
+                    {
+                        for (int i = 9; i >= 0; i--)
+                        {
+                            if(sr.EndOfStream) { throw new ApplicationException("Invalid File! Too few lines"); }
+                            string[] line = sr.ReadLine().Split(',');
+                            for (int j = 0; j < 5; j++)
+                            {
+                                Square sqr = new Square();
+                                try {
+                                    sqr.color = Convert.ToInt32(line[j]);
+                                    if (sqr.color < 1 || sqr.color > 3)
+                                    {
+                                        throw new ApplicationException(String.Format("Invalid value at line {0} position {1}", i + 1, j + 1));
+                                    }
+                                    brd.innerBoard[j, i] = sqr;
+                                }
+                                catch (IndexOutOfRangeException)
+                                {
+                                    throw new ApplicationException(String.Format("Too few columns on line {0}", i + 1));
+                                }
+                            }
+                        }
+                    }
+                }
+                catch (ArgumentException e)
+                {
+                    throw new ApplicationException("Input Path Null or Empty");
+                }
+                catch (IOException e)
+                {
+                    throw new ApplicationException("Input Path Not Valid");
+                }
+
 
                 return brd;
             }

@@ -1,5 +1,6 @@
 ﻿using GAF;
 using GAF.Operators;
+using Microsoft.Win32;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -237,7 +238,7 @@ namespace cecs545FinalProject
             statusLabel.Content = "Done...";
             startButton.IsEnabled = true;
 
-            log.SaveBrief(@"C:\Users\Andrew\Desktop\output.txt");
+            //log.SaveBrief(@"C:\Users\Andrew\Desktop\output.txt");
 
             ShowResultNavigator();
         }
@@ -263,7 +264,25 @@ namespace cecs545FinalProject
             startButton.IsEnabled = false;
             statusLabel.Content = "Running...";
 
-            gameBoard = ClickOMania.Board.GenerateRandomBoard(rand);
+            // Attempt to load board from input file if a file has been specified
+            if(String.IsNullOrWhiteSpace(inputFilePath.Text))
+            { // If no file specified, generate randomly
+                gameBoard = ClickOMania.Board.GenerateRandomBoard(rand);
+            }
+            else
+            { // If a file is specified, attempt to read it
+                try
+                {
+                    gameBoard = ClickOMania.Board.LoadBoardFromFile(inputFilePath.Text);
+                }
+                catch (ApplicationException ex)
+                { // If loading fails, display error message and don't attempt to run
+                    statusLabel.Content = ex.Message;
+                    startButton.IsEnabled = true;
+                    return;
+                }
+            }
+
             log = new Log(gameBoard);
 
             crossoverProbability = crossoverProbabilitySlider.Value/100;
@@ -316,6 +335,13 @@ namespace cecs545FinalProject
         {
             public int genNum;
             public double maxFit;
+        }
+
+        private void fileInputBrowseButton_Click(object sender, RoutedEventArgs e)
+        {
+            OpenFileDialog openFileDialog = new OpenFileDialog();
+            if (openFileDialog.ShowDialog() == true)
+                inputFilePath.Text = openFileDialog.FileName;
         }
     }
 }
