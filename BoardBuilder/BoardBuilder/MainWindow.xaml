@@ -1,0 +1,53 @@
+﻿<Window x:Class="BoardBuilder.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:BoardBuilder"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="388" Width="573">
+    <Window.Resources>
+        <local:DoubleValueConverter x:Key="DoubleValueConverter" />
+    </Window.Resources>
+    <Grid>
+        <TextBox x:Name="savePathTextBox" Height="23" Margin="89,0,170,10" TextWrapping="Wrap" VerticalAlignment="Bottom"/>
+        <Button x:Name="savePathSaveButton" Content="Save" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="75" Height="23" Click="savePathSaveButton_Click"/>
+        <Button x:Name="savePathBrowseButton" Content="Browse" HorizontalAlignment="Right" Margin="0,0,90,10" VerticalAlignment="Bottom" Width="75" Height="23" Click="savePathBrowseButton_Click"/>
+        <Label x:Name="savePathLabel" Content="Save To:" HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Bottom" Width="74" Height="23" Padding="5,3"/>
+        <TextBox x:Name="loadPathTextBox" Height="23" Margin="89,0,170,38" TextWrapping="Wrap" VerticalAlignment="Bottom"/>
+        <Button x:Name="loadPathSaveButton" Content="Load" HorizontalAlignment="Right" Margin="0,0,10,38" VerticalAlignment="Bottom" Width="75" Height="23" Click="loadPathSaveButton_Click"/>
+        <Button x:Name="loadPathBrowseButton" Content="Browse" HorizontalAlignment="Right" Margin="0,0,90,38" VerticalAlignment="Bottom" Width="75" Height="23" Click="loadPathBrowseButton_Click"/>
+        <Label x:Name="loadPathLabel" Content="Load From:" HorizontalAlignment="Left" Margin="10,0,0,38" VerticalAlignment="Bottom" Width="74" Height="23" Padding="5,3"/>
+        <Grid Margin="10,10,10,66">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="432*"/>
+                <ColumnDefinition Width="113*"/>
+            </Grid.ColumnDefinitions>
+            <Grid x:Name="EditGrid" Width="{Binding ActualHeight, RelativeSource={RelativeSource Self}, Converter={StaticResource DoubleValueConverter}}" Margin="10,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                    <RowDefinition Height="*" />
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+            </Grid>
+            <RadioButton x:Name="redRadioButton" Content="Red" Grid.Column="1" HorizontalAlignment="Right" Margin="0,10,24,0" VerticalAlignment="Top" Height="15" Width="39" GroupName="Color" IsChecked="True"/>
+            <RadioButton x:Name="greenRadioButton" Content="Green" Grid.Column="1" HorizontalAlignment="Right" Margin="0,30,12,0" VerticalAlignment="Top" Height="15" Width="51" GroupName="Color"/>
+            <RadioButton x:Name="purpleRadioButton" Content="Purple" Grid.Column="1" HorizontalAlignment="Right" Margin="0,50,10,0" VerticalAlignment="Top" Height="15" Width="53" GroupName="Color"/>
+        </Grid>
+
+    </Grid>
+</Window>
